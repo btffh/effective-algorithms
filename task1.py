@@ -8,13 +8,14 @@
 def checkSubsequence(sequence: str, subsequence: str) -> bool:
     """
     Функция проверки вхождения подпоследовательности в последовательность.
-    Временная сложность работы алгоритма - O(n), где n - длина последовательности.
+    Временная сложность работы алгоритма в худшем случае - O(n), где n - длина последовательности.
+    Временная сложность алгоритма в лучшем случае - O(x), где x - время разбиения строки на массив и сравнения целых чисел.
 
     :param sequence: исходная последовательность
     :type sequence: str
     :param subsequence: подпоследовательность для проверки
     :type subsequence: str
-    :return: подпоследовательность в последовательности
+    :return: подпоследовательность есть в последовательности
     :rtype: bool
     """
     seq = sequence.split(", ")
@@ -37,7 +38,18 @@ def checkSubsequence(sequence: str, subsequence: str) -> bool:
             return False
 
 
+# run program if it was called directly
 if __name__ == "__main__":
     sequence = "Yahoo, Amazon, Yahoo, Yahoo, eBay, Yahoo, Oracle"
-    subsequence = "Yahoo, eBay, Yahoo, Oracle, Yahoo"
-    print(checkSubsequence(sequence, subsequence))
+    subsequence = "Yahoo, eBay, Yahoo, Oracle"
+    print(checkSubsequence(sequence, subsequence))  # returns True
+
+    subsequence = "Yahoo, eBay, Yahoo, Oracle, Amazon"
+    print(checkSubsequence(sequence, subsequence))  # return False (does not contain)
+
+    subsequence = (
+        "Yahoo, eBay, Yahoo, Oracle, Amazon, Yahoo, eBay, Yahoo, Oracle, Amazon"
+    )
+    print(
+        checkSubsequence(sequence, subsequence)
+    )  # return False (subsequence is bigger than sequence)
