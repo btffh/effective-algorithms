@@ -3,13 +3,14 @@
 # Необходимо определить, содержится ли в последовательности 'S' подпоследовательность 's' с возможностью разбиения подпоследовательности, но с сохранением порядка элементов.
 # Пожпоследовательность 's': "купить Yahoo, купить eBay, купить Yahoo, купить Oracle".
 # Временная сложность алгоритма - O(n + m), где n, m - длина последовательностей 'S' и 's'.
+from typing import List
 
 
-def checkSubsequence(sequence: str, subsequence: str) -> bool:
+def checkSubsequence(seq: List[str], subseq: List[str]) -> bool:
     """
     Функция проверки вхождения подпоследовательности в последовательность.
     Временная сложность работы алгоритма в худшем случае - O(n), где n - длина последовательности.
-    Временная сложность алгоритма в лучшем случае - O(x), где x - время разбиения строки на массив и сравнения целых чисел.
+    Временная сложность работы алгоритма в лучшем случае - O(1) - время сравнения двух целых чисел.
 
     :param sequence: исходная последовательность
     :type sequence: str
@@ -18,9 +19,6 @@ def checkSubsequence(sequence: str, subsequence: str) -> bool:
     :return: подпоследовательность есть в последовательности
     :rtype: bool
     """
-    seq = sequence.split(", ")
-    subseq = subsequence.split(", ")
-
     if len(seq) < len(subseq):
         return False
 
@@ -38,18 +36,36 @@ def checkSubsequence(sequence: str, subsequence: str) -> bool:
             return False
 
 
+def checkSubsequenceStr(sequence: str, subsequence: str, sep: str = ", ") -> bool:
+    """
+    Функция проверки вхождения подпоследовательности в последовательность.
+    Временная сложность работы алгоритма в худшем случае - O(n), где n - длина последовательности.
+    Временная сложность работы алгоритма в лучшем случае - O(1) - время сравнения двух целых чисел.
+
+    :param sequence: исходная последовательность
+    :type sequence: str
+    :param subsequence: подпоследовательность для проверки
+    :type subsequence: str
+    :param sep: разделитель строк, defaults to ", "
+    :type sep: str, optional
+    :return: подпоследовательность есть в последовательности
+    :rtype: bool
+    """
+    return checkSubsequence(sequence.split(sep), subsequence.split(sep))
+
+
 # run program if it was called directly
 if __name__ == "__main__":
     sequence = "Yahoo, Amazon, Yahoo, Yahoo, eBay, Yahoo, Oracle"
     subsequence = "Yahoo, eBay, Yahoo, Oracle"
-    print(checkSubsequence(sequence, subsequence))  # returns True
+    print(checkSubsequenceStr(sequence, subsequence))  # returns True
 
     subsequence = "Yahoo, eBay, Yahoo, Oracle, Amazon"
-    print(checkSubsequence(sequence, subsequence))  # return False (does not contain)
+    print(checkSubsequenceStr(sequence, subsequence))  # return False (does not contain)
 
     subsequence = (
         "Yahoo, eBay, Yahoo, Oracle, Amazon, Yahoo, eBay, Yahoo, Oracle, Amazon"
     )
     print(
-        checkSubsequence(sequence, subsequence)
+        checkSubsequenceStr(sequence, subsequence)
     )  # return False (subsequence is bigger than sequence)
