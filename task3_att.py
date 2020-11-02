@@ -26,6 +26,19 @@ def sortBySum(
     return sorted(tasks, key=lambda x: x["p"] + x["f"], reverse=reverse)
 
 
+def sortByCoefSum(
+    tasks: List[Dict[str, int]], p: float = 0.1, f: float = 0.9, reverse: bool = True
+) -> List[Dict[str, int]]:
+    if p + f != 1:
+        if 0 <= f <= 1:
+            p = 1 - f
+        elif 0 <= p <= 1:
+            f = 1 - p
+        else:
+            p, f = 0.1, 0.9
+    return sorted(tasks, key=lambda x: x["p"] * p + x["f"] * f, reverse=reverse)
+
+
 def showQueue(queue: List[Dict[str, int]]) -> str:
     res = ["["]
     res.extend(["\t" + str(task) for task in queue])
@@ -60,6 +73,14 @@ if __name__ == "__main__":
     queue = sortBySum(tasks)
     print(showQueue(queue))
     print(analyzeQueue(queue))
+
+    print("--- Coef Sum Sort ---")
+    for i in range(1, 10):
+        coef = i / 10
+        print(f"sorting with coef: p={coef}, f={1 - coef}")
+        queue = sortByCoefSum(tasks, coef, 1 - coef)
+        print(showQueue(queue))
+        print(analyzeQueue(queue))
 
     # в результате трех экспериментов видно, что время работы суперкомпьютера
     # никак не изменялось (что вполне логично, ведь все задания выолняются
