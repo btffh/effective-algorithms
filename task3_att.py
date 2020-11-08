@@ -29,30 +29,6 @@
 # в блоке `if __name__ == "__main__":`, который является входной точкой в программу.
 
 from typing import List, Dict, Tuple
-from pprint import pprint
-
-
-# pattern: 'p > f' | 'f > p' | None
-def get_simple_test_case(n, pattern=None, left_border=0, right_border=30):
-    from random import randint
-
-    if left_border > right_border:
-        left_border, right_border = right_border, left_border
-
-    res = []
-    while len(res) < n:
-        p, f = randint(left_border, right_border), randint(left_border, right_border)
-
-        if pattern == 'p > f':
-            if f > p:
-                continue
-        elif pattern == 'f > p':
-            if p > f:
-                continue
-
-        res.append({'p': p, 'f': f})
-
-    return res
 
 
 def analyzeQueue(queue: List[Dict[str, int]]) -> Dict[str, int]:
@@ -218,26 +194,61 @@ if __name__ == "__main__":
     #    элементов), если отрезок имеет длину не более двух - вернуть отсортированный отрезок,
     #    метод сортировки в данном случае - сравнение обоих элементов отрезка
 
+    # tasks1 = [
+    #     {"p": 10, "f": 20},
+    #     {"p": 5, "f": 10},
+    #     {"p": 3, "f": 29},
+    #     {"p": 15, "f": 10},
+    #     {"p": 12, "f": 12},
+    #     {"p": 11, "f": 11},
+    #     {"p": 15, "f": 8},
+    #     {"p": 13, "f": 15},
+    #     {"p": 9, "f": 9},
+    # ]
+
     # для чистоты эксперимента реализуем все 4 рассмотренных решения для различных наборов данных:
-    tasks1 = [
-        {"p": 10, "f": 20},
-        {"p": 5, "f": 10},
-        {"p": 3, "f": 29},
-        {"p": 15, "f": 10},
-        {"p": 12, "f": 12},
-        {"p": 11, "f": 11},
-        {"p": 15, "f": 8},
-        {"p": 13, "f": 15},
-        {"p": 9, "f": 9},
+    p_gt_f_case = [
+        {'f': 10, 'p': 16},
+        {'f': 4, 'p': 8},
+        {'f': 17, 'p': 27},
+        {'f': 23, 'p': 28},
+        {'f': 8, 'p': 19},
+        {'f': 16, 'p': 24},
+        {'f': 4, 'p': 21},
+        {'f': 0, 'p': 9},
+        {'f': 0, 'p': 21},
+        {'f': 25, 'p': 28}
     ]
 
-    pprint(get_simple_test_case(10, pattern='p > f'))
-    pprint(get_simple_test_case(10, pattern='f > p'))
+    f_gt_p_case = [
+        {'f': 14, 'p': 4},
+        {'f': 9, 'p': 8},
+        {'f': 2, 'p': 2},
+        {'f': 30, 'p': 19},
+        {'f': 17, 'p': 17},
+        {'f': 27, 'p': 12},
+        {'f': 10, 'p': 7},
+        {'f': 11, 'p': 2},
+        {'f': 21, 'p': 14},
+        {'f': 27, 'p': 7}
+    ]
 
-    spiral_case = get_simple_test_case(5, pattern='p > f') + get_simple_test_case(5, pattern='f > p')
-    pprint(spiral_case)
+    mixed_case = [
+        {'f': 9, 'p': 26},
+        {'f': 9, 'p': 26},
+        {'f': 9, 'p': 9},
+        {'f': 20, 'p': 28},
+        {'f': 6, 'p': 16},
+        {'f': 30, 'p': 1},
+        {'f': 21, 'p': 2},
+        {'f': 6, 'p': 3},
+        {'f': 9, 'p': 4},
+        {'f': 14, 'p': 8}
+    ]
 
-    runExperiment(tasks1)
+    runExperiment(p_gt_f_case)
+    runExperiment(f_gt_p_case)
+    runExperiment(mixed_case)
 
     # в результате четырех экспериментов и эксперимента с интервалами
     # видно, что время работы суперкомпьютера
