@@ -29,6 +29,30 @@
 # в блоке `if __name__ == "__main__":`, который является входной точкой в программу.
 
 from typing import List, Dict, Tuple
+from pprint import pprint
+
+
+# pattern: 'p > f' | 'f > p' | None
+def get_simple_test_case(n, pattern=None, left_border=0, right_border=30):
+    from random import randint
+
+    if left_border > right_border:
+        left_border, right_border = right_border, left_border
+
+    res = []
+    while len(res) < n:
+        p, f = randint(left_border, right_border), randint(left_border, right_border)
+
+        if pattern == 'p > f':
+            if f > p:
+                continue
+        elif pattern == 'f > p':
+            if p > f:
+                continue
+
+        res.append({'p': p, 'f': f})
+
+    return res
 
 
 def analyzeQueue(queue: List[Dict[str, int]]) -> Dict[str, int]:
@@ -206,6 +230,12 @@ if __name__ == "__main__":
         {"p": 13, "f": 15},
         {"p": 9, "f": 9},
     ]
+
+    pprint(get_simple_test_case(10, pattern='p > f'))
+    pprint(get_simple_test_case(10, pattern='f > p'))
+
+    spiral_case = get_simple_test_case(5, pattern='p > f') + get_simple_test_case(5, pattern='f > p')
+    pprint(spiral_case)
 
     runExperiment(tasks1)
 
