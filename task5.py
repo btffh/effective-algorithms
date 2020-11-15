@@ -25,6 +25,15 @@ class Node(object):
 
 
 def getNodeSeqLen(node: Node) -> Tuple[List[int], int]:
+    """
+    Функция рекурсивного поиска последовательности максимальной длины
+
+    :param node: исходный узел, являющийся концом последовательности
+    :type node: Node
+    :return: последовательность элементов (чисел) и длина последовательности
+    :rtype: Tuple[List[int], int]
+    """
+
     def helper(curNode: Node, curSeq: List[int], depth: int) -> Tuple[List[int], int]:
         # print(f"depth {depth}, curSeq {curSeq}, Node {curNode}")
         curSeqC = curSeq[:]
