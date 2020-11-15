@@ -7,71 +7,83 @@
 from typing import List, Tuple
 
 
-def maxSeq(seq: List[int]) -> Tuple[int, List[int]]:
-    # временная сложность алгоритма - O(n)
-    # алгоритм заключается в переборе всей последовательности елементов и сравнении:
-    # 1. на каждом этапе текущее число сравнивается с предыдущем
-    #   1.1. если предыдущее число больше, то сравнивается длина предыдущей максимальной
-    #        последовательности и если текущая последовательность длиннее, то она становится
-    #        новой максимальной последовательностью
-    #   1.2. если текущее число меньше, то увеличивается счетчик длины текущей последовательности,
-    #        предыдущий элемент заменяется текущем, происходит переход к следующему элементу
-    maxCount, count = 0, 1
-    prev = seq[0]
-    analyticLogestSeq = []
-    analyticSeq = [seq[0]]
-    for el in seq[1:]:
-        if el > prev:
-            count += 1
-            analyticSeq.append(el)
-        else:
-            if count > maxCount:
-                maxCount = count
-                analyticLogestSeq = analyticSeq[:]
-            count = 1
-            analyticSeq = [el]
-        prev = el
+class Node(object):
+    def __init__(
+        self,
+        val: int,
+    ) -> None:
+        self.val: int = val
+        self.prevNodes: List[Node] = []
 
-    return maxCount, analyticLogestSeq
+    def __str__(self) -> str:
+        s = ""
+        if len(self.prevNodes) == 0:
+            s = "None"
+        else:
+            s = " | ".join([str(prev) for prev in self.prevNodes])
+        return f"val: {self.val}, prevNodes: ({s})"
+
+
+def getNodeSeqLen(node: Node) -> Tuple[List[int], int]:
+    def helper(curNode: Node, curSeq: List[int], depth: int) -> Tuple[List[int], int]:
+        # print(f"depth {depth}, curSeq {curSeq}, Node {curNode}")
+        curSeqC = curSeq[:]
+        curSeqC.append(curNode.val)
+        depthC = depth + 1
+        if len(curNode.prevNodes) == 0:
+            return curSeqC, depthC
+
+        maxSeq, maxDepth = [], 0
+        for prev in curNode.prevNodes:
+            s, d = helper(prev, curSeqC, depthC)
+            if d > maxDepth:
+                maxSeq, maxDepth = s, d
+
+        return maxSeq, maxDepth
+
+    return helper(node, [], 0)
 
 
 def maxSeqSpaces(seq: List[int]) -> Tuple[int, List[int]]:
-    minEl, minElInd = seq[0], 0
-    for ind, el in enumerate(seq):
-        if el < minEl:
-            minEl, minElInd = el, ind
+    """
+    Функция поиска наибольшей возрастающей подпоследовательности в исходном направлении
+    в массиве с учетом пропусков:
 
-    countMax = 1
-    prev = seq[minEl]
-    analyticLongestSeq = [minEl]
-    for el in seq[minElInd + 1 :]:
-        if el > prev:
-            countMax += 1
-            analyticLongestSeq.append(el)
-            prev = el
+        input: [1, 2, 3, 1, 4, 5, 6, 1, 2, 7, 3, 4]
+        result: [1, 2, 3, 4, 5, 6, 7]
 
-    return countMax, analyticLongestSeq
+    :param seq: исходная последовательность для поиска максимальной подпоследовательности
+    :type seq: List[int]
+    :return: максимальная длина овзрастающей подпоследовательности и сама подпоследовательность
+    :rtype: Tuple[int, List[int]]
+    """
+    nodes: List[Node] = []
+    nodes.append(Node(seq[0]))
+    for val in seq[1:]:
+        curNode = Node(val)
+        for node in nodes:
+            if node.val < val:
+                curNode.prevNodes.append(node)
+        nodes.append(curNode)
+
+    maxSeq, maxLen = [], 0
+    for node in nodes:
+        s, l = getNodeSeqLen(node)
+        if l > maxLen:
+            maxSeq, maxLen = s, l
+    maxSeq.reverse()
+    return maxLen, maxSeq
 
 
 if __name__ == "__main__":
-    arr = [1, 2, 3, 1, 4, 5, 6, 7, 1, 2, 3, 4]
-    countMax, analyticLongestSeq = maxSeq(arr)
-    print(f"{countMax}: {str(analyticLongestSeq)}")
-    # output >>>
-    # 5: [1, 4, 5, 6, 7]
-
+    arr = [1, 2, 3, 1, 4, 5, 6, 1, 2, 7, 3, 4]
     countMax, analyticLongestSeq = maxSeqSpaces(arr)
     print(f"{countMax}: {str(analyticLongestSeq)}")
     # output >>>
-    # 6: [1, 3, 4, 5, 6, 7]
+    # 7: [1, 2, 3, 4, 5, 6, 7]
 
     arr = [6, 2, 5, 1, 7, 4, 8, 3]
-    countMax, analyticLongestSeq = maxSeq(arr)
-    print(f"{countMax}: {str(analyticLongestSeq)}")
-    # output >>>
-    # 5: [1, 4, 5, 6, 7]
-
     countMax, analyticLongestSeq = maxSeqSpaces(arr)
     print(f"{countMax}: {str(analyticLongestSeq)}")
     # output >>>
-    # 5: [1, 4, 5, 6, 7]
+    # 4: [2, 5, 7, 8]
